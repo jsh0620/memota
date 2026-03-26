@@ -1,33 +1,47 @@
-const KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || getStoredApiKey()
+// ── API 키 관리 (localStorage) ──
+export function getStoredApiKey() {
+  return localStorage.getItem('planai-apikey') || ''
+}
+export function saveApiKey(key) {
+  localStorage.setItem('planai-apikey', key.trim())
+}
+export function clearApiKey() {
+  localStorage.removeItem('planai-apikey')
+}
 
-async function ask(system, user, maxTokens = 2500) {
-  if (!KEY || KEY === 'your_api_key_here') {
-    throw new Error('.env 파일에 VITE_ANTHROPIC_API_KEY 를 설정해주세요.')
+// ── 공통 fetch (Gemini) ──
+async function ask(system, user) {
+  const KEY = import.meta.env.VITE_GEMINI_API_KEY || getStoredApiKey()
+  if (!KEY) {
+    throw new Error('API 키가 설정되지 않았습니다.')
   }
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': KEY,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens,
-      system,
-      messages: [{ role: 'user', content: user }],
-    }),
-  })
+  const prompt = `${system}\n\n${user}`
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 2500,
+        },
+      }),
+    }
+  )
 
   if (!res.ok) {
     const j = await res.json().catch(() => ({}))
-    throw new Error(j?.error?.message ?? `API 오류 ${res.status}`)
+    const msg = j?.error?.message ?? `API 오류 ${res.status}`
+    if (res.status === 400) throw new Error('API 키가 유효하지 않습니다. 키를 다시 확인해주세요.')
+    throw new Error(msg)
   }
 
   const data = await res.json()
-  const text = data.content?.[0]?.text ?? ''
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
   const clean = text.replace(/```json|```/g, '').trim()
   return JSON.parse(clean)
 }
@@ -55,7 +69,7 @@ export async function generateGoalPlan({ period, periodUnit, goal, details }) {
 규칙: 각 요일 1~3개 항목, 항목은 구체적인 행동 단위, 주말은 복습/회고/휴식 위주`
 
   const user = `기간: ${period}${periodUnit}\n목표: ${goal}\n세부사항: ${details || '없음'}`
-  return ask(system, user, 3000)
+  return ask(system, user)
 }
 
 /* ── ② 최근 기록 기반 자동 생성 ── */
@@ -81,5 +95,5 @@ export async function generateAutoNextWeek(recentData) {
 - 점진적 난이도 조정`
 
   const user = `최근 플래너 기록:\n${JSON.stringify(recentData, null, 2)}`
-  return ask(system, user, 2000)
+  return ask(system, user)
 }
