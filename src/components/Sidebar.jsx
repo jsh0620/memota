@@ -6,11 +6,11 @@ import ApiKeyModal from './ApiKeyModal'
 
 const NAV = [
   { id: 'planner',  icon: '📅', label: '플래너',      tooltip: '오늘 할 일을 요일별로 직접 관리하세요' },
-  { id: 'ai-goal',  icon: '🎯', label: 'AI 계획 생성', tooltip: '목표와 기간을 입력하면 AI가 맞춤 계획을 설계해드립니다' },
+  { id: 'ai-goal',  icon: '🤖', label: 'AI 계획 생성', tooltip: '목표와 기간을 입력하면 AI가 맞춤 계획을 설계해드립니다' },
   { id: 'ai-auto',  icon: '✨', label: 'AI 주간 분석', tooltip: '지난 플래너를 분석해 다음 주 계획을 자동으로 제안해드립니다' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ user, onLogout }) {
   const { state, dispatch } = usePlanner()
   const { ui, plans } = state
   const { view, weekKey } = ui
@@ -105,6 +105,15 @@ export default function Sidebar() {
           </>
         )}
 
+        {/* 사용자 정보 + 로그아웃 */}
+        <div className="sidebar-user">
+          <div className="user-info">
+            <span className="user-avatar">{user?.username?.[0]?.toUpperCase() ?? '?'}</span>
+            <span className="user-name">{user?.username}</span>
+          </div>
+          <button className="logout-btn" onClick={onLogout} title="로그아웃">↩</button>
+        </div>
+
         <div className="sidebar-footer">llama-3.3-70b · Groq</div>
       </aside>
 
@@ -137,9 +146,9 @@ export default function Sidebar() {
             <span className="mobile-tab-label">{n.label}</span>
           </button>
         ))}
-        <button className="mobile-tab" onClick={() => setShowModal(true)}>
-          <span className="mobile-tab-icon">{hasKey ? '🔑' : '⚙'}</span>
-          <span className="mobile-tab-label">설정</span>
+        <button className="mobile-tab" onClick={onLogout}>
+          <span className="mobile-tab-icon">↩</span>
+          <span className="mobile-tab-label">로그아웃</span>
         </button>
       </nav>
 

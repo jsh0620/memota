@@ -1,46 +1,28 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react'
 import { getWeekKey } from '../utils/dateUtils'
+import { fetchPlans, savePlans, isLoggedIn } from '../utils/authApi'
 
 const Ctx = createContext(null)
 
-// ── localStorage helpers ──
-const STORAGE_KEY = 'planai-v1'
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch {}
-  return null
-}
-
-function saveState(state) {
-  try {
-    const { ui, ...persist } = state
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(persist))
-  } catch {}
-}
-
-// ── Initial state ──
 const todayWk = getWeekKey()
 
 function init() {
-  const saved = loadState()
   return {
-    // persisted
-    plans: saved?.plans ?? {},        // { weekKey: { dayKey: Task[] } }
-    aiHistory: saved?.aiHistory ?? [], // [{ id, type, createdAt, input, result }]
-    // ui (not persisted)
+    plans: {},
+    aiHistory: [],
     ui: {
-      view: 'planner',               // 'planner' | 'ai-goal' | 'ai-auto'
+      view: 'planner',
       weekKey: todayWk,
     },
+    loaded: false,
   }
 }
 
-// ── Reducer ──
 function reducer(state, action) {
   switch (action.type) {
+
+    case 'PLANS_LOADED':
+      return { ...state, plans: action.plans, loaded: true }
 
     case 'UI_VIEW': return { ...state, ui: { ...state.ui, view: action.view } }
     case 'UI_WEEK': return { ...state, ui: { ...state.ui, weekKey: action.weekKey } }
@@ -104,8 +86,7 @@ function reducer(state, action) {
     }
 
     case 'AI_APPLY_WEEK': {
-      // Apply AI result for a specific weekKey
-      const { weekKey, dayTasks } = action  // dayTasks: { mon:[...], tue:[...], ... }
+      const { weekKey, dayTasks } = action
       const existing = state.plans[weekKey] ?? {}
       const merged = { ...existing }
       Object.entries(dayTasks).forEach(([day, texts]) => {
@@ -129,15 +110,35 @@ function reducer(state, action) {
       }
     }
 
+    case 'RESET':
+      return init()
+
     default: return state
   }
 }
 
-// ── Provider ──
-export function PlannerProvider({ children }) {
+export function PlannerProvider({ children, user }) {
   const [state, dispatch] = useReducer(reducer, null, init)
+  const saveTimer = useRef(null)
 
-  useEffect(() => { saveState(state) }, [state])
+  // 로그인 시 서버에서 플래너 불러오기
+  useEffect(() => {
+    if (!user) return
+    fetchPlans()
+      .then(plans => dispatch({ type: 'PLANS_LOADED', plans }))
+      .catch(() => dispatch({ type: 'PLANS_LOADED', plans: {} }))
+  }, [user])
+
+  // 플랜 변경 시 서버에 자동 저장 (디바운스 2초)
+  useEffect(() => {
+    if (!state.loaded) return
+    if (!isLoggedIn()) return
+    clearTimeout(saveTimer.current)
+    saveTimer.current = setTimeout(() => {
+      savePlans(state.plans).catch(console.error)
+    }, 2000)
+    return () => clearTimeout(saveTimer.current)
+  }, [state.plans, state.loaded])
 
   return <Ctx.Provider value={{ state, dispatch }}>{children}</Ctx.Provider>
 }

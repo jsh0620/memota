@@ -71,21 +71,13 @@ function AddTask({ weekKey, day }) {
 
   return (
     <div className="add-task-wrap">
-      <div className="add-task-row">
-        <input
-          className="add-task-input"
-          placeholder="+ 할 일 추가"
-          value={val}
-          onChange={e => setVal(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter') submit() }}
-        />
-        <button
-          className="add-task-btn"
-          onClick={submit}
-          disabled={!val.trim()}
-          title="추가"
-        >+</button>
-      </div>
+      <input
+        className="add-task-input"
+        placeholder="+ 할 일 추가"
+        value={val}
+        onChange={e => setVal(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') submit() }}
+      />
     </div>
   )
 }
