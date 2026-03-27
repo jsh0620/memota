@@ -2,21 +2,13 @@ import React, { useState } from 'react'
 import { register, login } from '../utils/authApi'
 
 export default function AuthPage({ onLogin }) {
-  const [mode, setMode]         = useState('login')
+  const [mode, setMode]         = useState('login')   // 'login' | 'register'
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm]   = useState('')
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
   const [success, setSuccess]   = useState('')
-  const [theme, setTheme]       = useState(() => localStorage.getItem('planai-theme') || 'dark')
-
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark'
-    setTheme(next)
-    localStorage.setItem('planai-theme', next)
-    document.documentElement.setAttribute('data-theme', next)
-  }
 
   async function handleSubmit() {
     setError(''); setSuccess('')
@@ -27,6 +19,7 @@ export default function AuthPage({ onLogin }) {
       if (password !== confirm) { setError('비밀번호가 일치하지 않습니다.'); return }
       if (password.length < 6)  { setError('비밀번호는 6자 이상이어야 합니다.'); return }
     }
+
     setLoading(true)
     try {
       if (mode === 'register') {
@@ -52,23 +45,14 @@ export default function AuthPage({ onLogin }) {
   return (
     <div className="auth-wrap">
       <div className="auth-box">
-
-        {/* 테마 토글 — 박스 안 우상단 */}
-        <button
-          className="theme-toggle"
-          style={{ position: 'absolute', top: 14, right: 14 }}
-          onClick={toggleTheme}
-          title="테마 변경"
-        >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-
+        {/* 로고 */}
         <div className="auth-logo">
           <div className="auth-logo-icon">✦</div>
           <div className="auth-logo-name">memota</div>
           <div className="auth-logo-sub">AI-POWERED PLANNER</div>
         </div>
 
+        {/* 탭 */}
         <div className="auth-tabs">
           <button
             className={`auth-tab ${mode === 'login' ? 'active' : ''}`}
@@ -80,6 +64,7 @@ export default function AuthPage({ onLogin }) {
           >회원가입</button>
         </div>
 
+        {/* 폼 */}
         <div className="auth-form">
           <div className="auth-field">
             <label className="auth-label">아이디</label>

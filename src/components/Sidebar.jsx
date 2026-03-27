@@ -106,6 +106,7 @@ export default function Sidebar({ user, onLogout }) {
         )}
 
         {/* 사용자 정보 + 로그아웃 */}
+        <div className="sidebar-spacer" />
         <div className="sidebar-user">
           <div className="user-info">
             <span className="user-avatar">{user?.username?.[0]?.toUpperCase() ?? '?'}</span>

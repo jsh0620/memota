@@ -48,6 +48,42 @@
   --transition: 180ms cubic-bezier(.4,0,.2,1);
 }
 
+/* ─── 라이트 모드 ─── */
+[data-theme="light"] {
+  --bg:        #f5f5fa;
+  --bg-2:      #ffffff;
+  --bg-3:      #eeeef6;
+  --bg-4:      #e5e5f0;
+  --bg-5:      #d8d8eb;
+
+  --line:      rgba(0,0,0,0.07);
+  --line-2:    rgba(0,0,0,0.11);
+  --line-3:    rgba(0,0,0,0.18);
+
+  --tx:        #1a1a2e;
+  --tx-2:      #4a4a6a;
+  --tx-3:      #8a8aaa;
+
+  --gold:      #c49a3c;
+  --gold-dim:  rgba(196,154,60,0.12);
+  --gold-glow: rgba(196,154,60,0.25);
+
+  --violet:    #7c5cbf;
+  --violet-dim:rgba(124,92,191,0.12);
+
+  --green:     #1a9e6a;
+  --green-dim: rgba(26,158,106,0.12);
+  --red:       #d94f4f;
+  --red-dim:   rgba(217,79,79,0.12);
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: var(--bg-3);
+  color: var(--tx);
+}
+
 html, body, #root {
   height: 100%;
   background: var(--bg);
@@ -96,6 +132,11 @@ textarea { resize: vertical; }
   overflow-y: auto;
 }
 
+.sidebar-section {
+  padding: 16px 12px 8px;
+  flex-shrink: 0;
+}
+
 .sidebar-brand {
   padding: 24px 20px 20px;
   border-bottom: 1px solid var(--line);
@@ -113,7 +154,6 @@ textarea { resize: vertical; }
   letter-spacing: .04em;
 }
 
-.sidebar-section { padding: 16px 12px 8px; }
 .sidebar-label {
   font-size: 10px;
   letter-spacing: .1em;
@@ -165,6 +205,24 @@ textarea { resize: vertical; }
   background: var(--bg-3);
   border-radius: var(--r);
   border: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+/* 사이드바 중간 빈공간 채우기 */
+.sidebar-spacer {
+  flex: 1;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin: 0 12px 8px;
+  background: var(--bg-3);
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  flex-shrink: 0;
 }
 .stats-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .stats-title { font-size: 11px; color: var(--tx-3); }
@@ -790,7 +848,6 @@ textarea { resize: vertical; }
 
 /* ─── Auth Page ─── */
 .auth-wrap {
-  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -904,16 +961,6 @@ textarea { resize: vertical; }
 }
 
 /* ─── Sidebar user section ─── */
-.sidebar-user {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  margin: 0 12px 8px;
-  background: var(--bg-3);
-  border-radius: var(--r);
-  border: 1px solid var(--line);
-}
 .user-info {
   display: flex;
   align-items: center;
