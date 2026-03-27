@@ -9,39 +9,38 @@ export function clearApiKey() {
   localStorage.removeItem('planai-apikey')
 }
 
-// ── 공통 fetch (Gemini) ──
+// ── 공통 fetch (Groq) ──
 async function ask(system, user) {
-  const KEY = import.meta.env.VITE_GEMINI_API_KEY || getStoredApiKey()
+  const KEY = import.meta.env.VITE_GROQ_API_KEY || getStoredApiKey()
   if (!KEY) {
-    throw new Error('API 키가 설정되지 않았습니다.')
+    throw new Error('API 키가 설정되지 않았습니다. ⚙ 설정에서 Groq API 키를 입력해주세요.')
   }
 
-  const prompt = `${system}\n\n${user}`
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2500,
-        },
-      }),
-    }
-  )
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user',   content: user },
+      ],
+      temperature: 0.7,
+      max_tokens: 2500,
+    }),
+  })
 
   if (!res.ok) {
     const j = await res.json().catch(() => ({}))
-    const msg = j?.error?.message ?? `API 오류 ${res.status}`
-    if (res.status === 400) throw new Error('API 키가 유효하지 않습니다. 키를 다시 확인해주세요.')
-    throw new Error(msg)
+    if (res.status === 401) throw new Error('API 키가 유효하지 않습니다. 키를 다시 확인해주세요.')
+    throw new Error(j?.error?.message ?? `API 오류 ${res.status}`)
   }
 
   const data = await res.json()
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+  const text = data.choices?.[0]?.message?.content ?? ''
   const clean = text.replace(/```json|```/g, '').trim()
   return JSON.parse(clean)
 }
