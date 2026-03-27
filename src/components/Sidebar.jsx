@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { usePlanner } from '../context/PlannerContext'
-import { prevWeekKey, nextWeekKey, formatWeekRange } from '../utils/dateUtils'
+import { prevWeekKey, nextWeekKey, formatWeekRange, todayDayKey } from '../utils/dateUtils'
 import { getStoredApiKey } from '../utils/claudeApi'
 import ApiKeyModal from './ApiKeyModal'
 
 const NAV = [
-  { id: 'planner',  icon: '📅', label: '플래너' },
-  { id: 'ai-goal',  icon: '🎯', label: 'AI 목표' },
-  { id: 'ai-auto',  icon: '✨', label: 'AI 자동' },
+  { id: 'planner',  icon: '📅', label: '플래너',      tooltip: '오늘 할 일을 요일별로 직접 관리하세요' },
+  { id: 'ai-goal',  icon: '🎯', label: 'AI 계획 생성', tooltip: '목표와 기간을 입력하면 AI가 맞춤 계획을 설계해드립니다' },
+  { id: 'ai-auto',  icon: '✨', label: 'AI 주간 분석', tooltip: '지난 플래너를 분석해 다음 주 계획을 자동으로 제안해드립니다' },
 ]
 
 export default function Sidebar() {
@@ -25,14 +25,21 @@ export default function Sidebar() {
   }, [theme])
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
+  const setView = (v) => dispatch({ type: 'UI_VIEW', view: v })
 
+  // 이번 주 달성률
   const wp = plans[weekKey] ?? {}
   const allTasks = Object.values(wp).flat()
   const total = allTasks.length
   const done  = allTasks.filter(t => t.done).length
   const pct   = total ? Math.round((done / total) * 100) : 0
 
-  const setView = (v) => dispatch({ type: 'UI_VIEW', view: v })
+  // 오늘 달성률
+  const todayKey   = todayDayKey()
+  const todayTasks = wp[todayKey] ?? []
+  const todayTotal = todayTasks.length
+  const todayDone  = todayTasks.filter(t => t.done).length
+  const todayPct   = todayTotal ? Math.round((todayDone / todayTotal) * 100) : 0
 
   return (
     <>
@@ -55,6 +62,7 @@ export default function Sidebar() {
               key={n.id}
               className={`nav-btn ${view === n.id ? 'active' : ''}`}
               onClick={() => setView(n.id)}
+              title={n.tooltip}
             >
               <span className="nav-icon">{n.icon}</span>
               <span>{n.label}</span>
@@ -72,6 +80,18 @@ export default function Sidebar() {
 
             {total > 0 && (
               <div className="sidebar-stats">
+                {todayTotal > 0 && (
+                  <>
+                    <div className="stats-row">
+                      <span className="stats-title">오늘 달성률</span>
+                      <span className="stats-pct" style={{ color: 'var(--green)' }}>{todayPct}%</span>
+                    </div>
+                    <div className="stats-bar">
+                      <div className="stats-fill" style={{ width: `${todayPct}%`, background: 'var(--green)' }} />
+                    </div>
+                    <div className="stats-detail" style={{ marginBottom: 10 }}>{todayDone} / {todayTotal} 완료</div>
+                  </>
+                )}
                 <div className="stats-row">
                   <span className="stats-title">이번 주 달성률</span>
                   <span className="stats-pct">{pct}%</span>
@@ -85,37 +105,8 @@ export default function Sidebar() {
           </>
         )}
 
-        {/* <div className="sidebar-api-section">
-          <button className="api-key-btn" onClick={() => setShowModal(true)}>
-            <span className={`api-key-dot ${hasKey ? 'connected' : 'disconnected'}`} />
-            <span>{hasKey ? 'API 키 연결됨' : 'API 키 설정 필요'}</span>
-            <span className="api-key-gear">⚙</span>
-          </button>
-        </div> */}
-
         <div className="sidebar-footer">llama-3.3-70b · Groq</div>
       </aside>
-
-      {/* ── 모바일 하단 탭바 ── */}
-      <nav className="mobile-tabbar">
-        {NAV.map(n => (
-          <button
-            key={n.id}
-            className={`mobile-tab ${view === n.id ? 'active' : ''}`}
-            onClick={() => setView(n.id)}
-          >
-            <span className="mobile-tab-icon">{n.icon}</span>
-            <span className="mobile-tab-label">{n.label}</span>
-          </button>
-        ))}
-        <button
-          className="mobile-tab"
-          onClick={() => setShowModal(true)}
-        >
-          <span className="mobile-tab-icon">{hasKey ? '🔑' : '⚙'}</span>
-          <span className="mobile-tab-label">설정</span>
-        </button>
-      </nav>
 
       {/* ── 모바일 상단 헤더 ── */}
       <header className="mobile-header">
@@ -133,6 +124,24 @@ export default function Sidebar() {
           </button>
         </div>
       </header>
+
+      {/* ── 모바일 하단 탭바 ── */}
+      <nav className="mobile-tabbar">
+        {NAV.map(n => (
+          <button
+            key={n.id}
+            className={`mobile-tab ${view === n.id ? 'active' : ''}`}
+            onClick={() => setView(n.id)}
+          >
+            <span className="mobile-tab-icon">{n.icon}</span>
+            <span className="mobile-tab-label">{n.label}</span>
+          </button>
+        ))}
+        <button className="mobile-tab" onClick={() => setShowModal(true)}>
+          <span className="mobile-tab-icon">{hasKey ? '🔑' : '⚙'}</span>
+          <span className="mobile-tab-label">설정</span>
+        </button>
+      </nav>
 
       {showModal && <ApiKeyModal onClose={() => setShowModal(false)} />}
     </>

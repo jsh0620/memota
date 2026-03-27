@@ -2,12 +2,11 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Canvas - 기존보다 밝게 조정 */
-  --bg:        #13131f;
-  --bg-2:      #1c1c2e;
-  --bg-3:      #222236;
-  --bg-4:      #2a2a42;
-  --bg-5:      #32324e;
+  --bg:        #1a1a2a;
+  --bg-2:      #22223a;
+  --bg-3:      #2a2a44;
+  --bg-4:      #32324e;
+  --bg-5:      #3a3a58;
 
   /* Borders */
   --line:      rgba(255,255,255,0.08);
@@ -271,8 +270,20 @@ textarea { resize: vertical; }
   margin-left: 4px;
   vertical-align: middle;
 }
-.day-col.is-weekend .day-name { color: var(--violet); }
-
+.day-col.is-weekend {
+  background: rgba(167, 139, 250, 0.08);
+  border-left: 2px solid rgba(167, 139, 250, 0.4);
+}
+.day-col.is-weekend .day-head {
+  background: rgba(167, 139, 250, 0.1);
+}
+.day-col.is-weekend .day-name {
+  color: var(--violet);
+}
+.day-col.is-weekend .day-date {
+  color: var(--violet);
+  opacity: 0.9;
+}
 .task-area {
   flex: 1;
   padding: 8px;
@@ -368,6 +379,35 @@ textarea { resize: vertical; }
 /* ─── Add Task ─── */
 .add-task-wrap {
   padding: 6px 8px 8px;
+}
+.add-task-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.add-task-row .add-task-input {
+  flex: 1;
+}
+.add-task-btn {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  background: var(--gold-dim);
+  color: var(--gold);
+  border: 1px solid rgba(232,184,109,0.3);
+  border-radius: 7px;
+  font-size: 18px;
+  font-weight: 300;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+  line-height: 1;
+}
+.add-task-btn:hover:not(:disabled) {
+  background: var(--gold);
+  color: #09090f;
+}
+.add-task-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 .add-task-input {
   width: 100%;
