@@ -800,6 +800,7 @@ textarea { resize: vertical; }
 }
 
 .auth-box {
+  position: relative;
   width: 100%;
   max-width: 400px;
   background: var(--bg-2);
