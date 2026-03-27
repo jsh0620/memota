@@ -1,6 +1,25 @@
 import React, { useState } from 'react'
 import { register, login } from '../utils/authApi'
 
+
+// 테마 토글 추가
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('planai-theme') || 'dark')
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('planai-theme', theme)
+  }, [theme])
+  return (
+    <button
+      className="theme-toggle"
+      style={{ position: 'absolute', top: 20, right: 20 }}
+      onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+      title="테마 변경"
+    >
+      {theme === 'dark' ? '☀️' : '🌙'}
+    </button>
+  )
+}
 export default function AuthPage({ onLogin }) {
   const [mode, setMode]         = useState('login')   // 'login' | 'register'
   const [username, setUsername] = useState('')
@@ -44,6 +63,7 @@ export default function AuthPage({ onLogin }) {
 
   return (
     <div className="auth-wrap">
+      <ThemeToggle />
       <div className="auth-box">
         {/* 로고 */}
         <div className="auth-logo">

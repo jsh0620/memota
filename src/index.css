@@ -790,6 +790,7 @@ textarea { resize: vertical; }
 
 /* ─── Auth Page ─── */
 .auth-wrap {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -907,11 +908,10 @@ textarea { resize: vertical; }
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  margin: 4px 12px;
+  margin: 0 12px 8px;
   background: var(--bg-3);
   border-radius: var(--r);
   border: 1px solid var(--line);
-  margin-top: auto;
 }
 .user-info {
   display: flex;
