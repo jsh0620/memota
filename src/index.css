@@ -2,22 +2,22 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Canvas */
-  --bg:        #09090f;
-  --bg-2:      #111119;
-  --bg-3:      #16161f;
-  --bg-4:      #1d1d28;
-  --bg-5:      #252535;
+  /* Canvas - 기존보다 밝게 조정 */
+  --bg:        #13131f;
+  --bg-2:      #1c1c2e;
+  --bg-3:      #222236;
+  --bg-4:      #2a2a42;
+  --bg-5:      #32324e;
 
   /* Borders */
-  --line:      rgba(255,255,255,0.06);
-  --line-2:    rgba(255,255,255,0.10);
-  --line-3:    rgba(255,255,255,0.16);
+  --line:      rgba(255,255,255,0.08);
+  --line-2:    rgba(255,255,255,0.12);
+  --line-3:    rgba(255,255,255,0.20);
 
   /* Text */
-  --tx:        #eeeef5;
-  --tx-2:      #9494ae;
-  --tx-3:      #56566a;
+  --tx:        #f0f0fa;
+  --tx-2:      #a0a0c0;
+  --tx-3:      #60607a;
 
   /* Accent — warm gold */
   --gold:      #e8b86d;
@@ -46,6 +46,35 @@
   /* Misc */
   --sidebar: 220px;
   --transition: 180ms cubic-bezier(.4,0,.2,1);
+}
+
+/* ─── 라이트모드 ─── */
+[data-theme="light"] {
+  --bg:        #f5f5fa;
+  --bg-2:      #ffffff;
+  --bg-3:      #eeeef6;
+  --bg-4:      #e5e5f0;
+  --bg-5:      #d8d8eb;
+
+  --line:      rgba(0,0,0,0.07);
+  --line-2:    rgba(0,0,0,0.11);
+  --line-3:    rgba(0,0,0,0.18);
+
+  --tx:        #1a1a2e;
+  --tx-2:      #4a4a6a;
+  --tx-3:      #8a8aaa;
+
+  --gold:      #c49a3c;
+  --gold-dim:  rgba(196,154,60,0.12);
+  --gold-glow: rgba(196,154,60,0.25);
+
+  --violet:    #7c5cbf;
+  --violet-dim:rgba(124,92,191,0.12);
+
+  --green:     #1a9e6a;
+  --green-dim: rgba(26,158,106,0.12);
+  --red:       #d94f4f;
+  --red-dim:   rgba(217,79,79,0.12);
 }
 
 html, body, #root {
@@ -595,3 +624,26 @@ textarea { resize: vertical; }
   .nav-btn { justify-content: center; }
   .planner-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ─── 라이트모드 input/select 배경 ─── */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: var(--bg-3);
+  color: var(--tx);
+}
+
+/* ─── 테마 토글 버튼 ─── */
+.theme-toggle {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-4);
+  border: 1px solid var(--line-2);
+  font-size: 15px;
+  color: var(--tx-2);
+  transition: all var(--transition);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--bg-5); color: var(--tx); }
