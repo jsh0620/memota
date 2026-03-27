@@ -5,9 +5,9 @@ import { getStoredApiKey } from '../utils/claudeApi'
 import ApiKeyModal from './ApiKeyModal'
 
 const NAV = [
-  { id: 'planner',  icon: '📅', label: '주간 플래너' },
-  { id: 'ai-goal',  icon: '🎯', label: 'AI 목표 플래너' },
-  { id: 'ai-auto',  icon: '✨', label: 'AI 자동 플래너' },
+  { id: 'planner',  icon: '📅', label: '플래너' },
+  { id: 'ai-goal',  icon: '🎯', label: 'AI 목표' },
+  { id: 'ai-auto',  icon: '✨', label: 'AI 자동' },
 ]
 
 export default function Sidebar() {
@@ -32,11 +32,14 @@ export default function Sidebar() {
   const done  = allTasks.filter(t => t.done).length
   const pct   = total ? Math.round((done / total) * 100) : 0
 
+  const setView = (v) => dispatch({ type: 'UI_VIEW', view: v })
+
   return (
     <>
+      {/* ── 데스크탑 사이드바 ── */}
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="brand-name">memota</div>
             <button className="theme-toggle" onClick={toggleTheme} title="테마 변경">
               {theme === 'dark' ? '☀️' : '🌙'}
@@ -51,7 +54,7 @@ export default function Sidebar() {
             <button
               key={n.id}
               className={`nav-btn ${view === n.id ? 'active' : ''}`}
-              onClick={() => dispatch({ type: 'UI_VIEW', view: n.id })}
+              onClick={() => setView(n.id)}
             >
               <span className="nav-icon">{n.icon}</span>
               <span>{n.label}</span>
@@ -82,16 +85,54 @@ export default function Sidebar() {
           </>
         )}
 
-        <div className="sidebar-api-section">
+        {/* <div className="sidebar-api-section">
           <button className="api-key-btn" onClick={() => setShowModal(true)}>
             <span className={`api-key-dot ${hasKey ? 'connected' : 'disconnected'}`} />
             <span>{hasKey ? 'API 키 연결됨' : 'API 키 설정 필요'}</span>
             <span className="api-key-gear">⚙</span>
           </button>
-        </div>
+        </div> */}
 
         <div className="sidebar-footer">llama-3.3-70b · Groq</div>
       </aside>
+
+      {/* ── 모바일 하단 탭바 ── */}
+      <nav className="mobile-tabbar">
+        {NAV.map(n => (
+          <button
+            key={n.id}
+            className={`mobile-tab ${view === n.id ? 'active' : ''}`}
+            onClick={() => setView(n.id)}
+          >
+            <span className="mobile-tab-icon">{n.icon}</span>
+            <span className="mobile-tab-label">{n.label}</span>
+          </button>
+        ))}
+        <button
+          className="mobile-tab"
+          onClick={() => setShowModal(true)}
+        >
+          <span className="mobile-tab-icon">{hasKey ? '🔑' : '⚙'}</span>
+          <span className="mobile-tab-label">설정</span>
+        </button>
+      </nav>
+
+      {/* ── 모바일 상단 헤더 ── */}
+      <header className="mobile-header">
+        <div className="mobile-header-brand">memota</div>
+        <div className="mobile-header-right">
+          {view === 'planner' && (
+            <div className="mobile-week-nav">
+              <button className="week-arrow" onClick={() => dispatch({ type: 'UI_WEEK', weekKey: prevWeekKey(weekKey) })}>◀</button>
+              <span className="week-label" style={{ fontSize: 11 }}>{formatWeekRange(weekKey)}</span>
+              <button className="week-arrow" onClick={() => dispatch({ type: 'UI_WEEK', weekKey: nextWeekKey(weekKey) })}>▶</button>
+            </div>
+          )}
+          <button className="theme-toggle" onClick={toggleTheme}>
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+        </div>
+      </header>
 
       {showModal && <ApiKeyModal onClose={() => setShowModal(false)} />}
     </>
