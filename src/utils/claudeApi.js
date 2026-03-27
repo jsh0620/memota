@@ -83,7 +83,8 @@ return ask(system, user)
 
 /* ── ② 최근 기록 기반 자동 생성 ── */
 export async function generateAutoNextWeek(recentData) {
-  const system = `당신은 개인 AI 플래너입니다. 사용자의 최근 2주 플래너 기록을 분석해서 다음 주 계획을 제안해주세요.
+  const system = `당신은 개인 AI 플래너입니다. 플래너에 포함된 단어와 연관이 있는 단어가 아니라면 반드시 한국어로만 답변하세요. 영어, 중국어, 일본어 등 다른 언어 사용 절대 금지.
+사용자의 최근 2주 플래너 기록을 분석해서 다음 주 계획을 제안해주세요.
 
 출력 형식 (순수 JSON, 코드블록 없음):
 {
