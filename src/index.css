@@ -642,16 +642,50 @@ textarea { resize: vertical; }
 .empty-icon { font-size: 32px; }
 .empty-text { font-size: 13px; color: var(--tx-3); text-align: center; }
 
-/* ─── Responsive compact ─── */
+/* ─── 모바일 전용 요소 — 기본 숨김 ─── */
+.mobile-header { display: none; }
+.mobile-tabbar  { display: none; }
+
+/* ─── Responsive ─── */
 @media (max-width: 1200px) {
   .planner-grid { grid-template-columns: repeat(4, 1fr); }
-  .day-col:nth-child(5), .day-col:nth-child(6), .day-col:nth-child(7) { grid-column: auto; }
 }
-@media (max-width: 900px) {
-  :root { --sidebar: 56px; }
-  .sidebar-brand, .sidebar-label, .week-stepper, .sidebar-stats, .nav-btn span, .sidebar-footer { display: none; }
-  .nav-btn { justify-content: center; }
-  .planner-grid { grid-template-columns: repeat(2, 1fr); }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .app-shell { flex-direction: column; height: 100dvh; }
+  .main-content { padding-top: 56px; padding-bottom: 64px; overflow-y: auto; height: 100%; }
+  .mobile-header {
+    display: flex; align-items: center; justify-content: space-between;
+    position: fixed; top: 0; left: 0; right: 0; height: 56px;
+    background: var(--bg-2); border-bottom: 1px solid var(--line);
+    padding: 0 16px; z-index: 100;
+  }
+  .mobile-header-brand { font-family: var(--serif); font-size: 20px; color: var(--gold); letter-spacing: .03em; }
+  .mobile-header-right { display: flex; align-items: center; gap: 8px; }
+  .mobile-week-nav { display: flex; align-items: center; gap: 4px; }
+  .mobile-tabbar {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+    height: 64px; background: var(--bg-2); border-top: 1px solid var(--line);
+    z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mobile-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--tx-3); transition: all var(--transition); border-radius: 0; }
+  .mobile-tab.active { color: var(--gold); }
+  .mobile-tab-icon  { font-size: 20px; line-height: 1; }
+  .mobile-tab-label { font-size: 10px; font-weight: 600; }
+  .planner-grid { grid-template-columns: 1fr; border-left: none; }
+  .day-col { min-height: auto; border-right: none; }
+  .day-head { position: static; }
+  .ai-page { padding: 16px; }
+  .page-header { padding: 16px 16px 12px; }
+  .page-title { font-size: 20px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .field.span2 { grid-column: span 1; }
+  .result-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .day-tasks-row { grid-template-columns: 50px 1fr; }
+  .modal-box { width: calc(100vw - 24px); }
+  .modal-body { padding: 16px; }
+  .modal-footer { padding: 12px 16px; }
 }
 
 /* ─── API Key section in sidebar ─── */
