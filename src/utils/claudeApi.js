@@ -73,8 +73,12 @@ export async function generateGoalPlan({ period, periodUnit, goal, details }) {
 - 각 요일 1~3개 항목, 주말은 복습/회고/실전 연습 위주
 - 주차가 지날수록 난이도와 양을 점진적으로 높이기`
 
-  const user = `기간: ${period}${periodUnit}\n목표: ${goal}\n세부사항: ${details || '없음'}`
-  return ask(system, user)
+  const user = `기간: ${period}${periodUnit}
+목표: ${goal}
+가용 시간 및 제약조건: ${details || '없음'}
+
+중요: 위 가용 시간에 명시된 요일에만 계획을 배정하세요. 명시되지 않은 요일(휴무일)은 반드시 빈 배열 []로 두세요.`
+return ask(system, user)
 }
 
 /* ── ② 최근 기록 기반 자동 생성 ── */
