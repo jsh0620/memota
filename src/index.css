@@ -1065,3 +1065,177 @@ textarea { resize: vertical; }
   transform: translateX(26px);
   background: var(--gold);
 }
+
+/* ─── Vault ─── */
+.vault-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r2);
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+.vault-card:hover { border-color: var(--line-3); }
+
+.vault-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  user-select: none;
+}
+.vault-card-left { flex: 1; min-width: 0; }
+.vault-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tx);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vault-card-meta { display: flex; align-items: center; gap: 8px; }
+.vault-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--gold-dim);
+  color: var(--gold);
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(232,184,109,0.3);
+}
+.vault-date { font-size: 11px; color: var(--tx-3); }
+
+.vault-card-actions { display: flex; align-items: center; gap: 6px; }
+.vault-delete-btn {
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--tx-3);
+  transition: all var(--transition);
+}
+.vault-delete-btn:hover { background: var(--red-dim); color: var(--red); }
+
+.vault-chevron { font-size: 10px; color: var(--tx-3); flex-shrink: 0; }
+
+.vault-summary {
+  padding: 0 18px 12px;
+  font-size: 12px;
+  color: var(--tx-2);
+  line-height: 1.6;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.vault-detail {
+  padding: 0 18px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.vault-clear-btn {
+  font-size: 12px;
+  color: var(--tx-3);
+  padding: 6px 12px;
+  border-radius: var(--r);
+  border: 1px solid var(--line-2);
+  background: var(--bg-3);
+  transition: all var(--transition);
+}
+.vault-clear-btn:hover { color: var(--red); border-color: rgba(248,113,113,0.3); background: var(--red-dim); }
+
+.vault-save-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-4);
+  color: var(--tx-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+.vault-save-btn:hover:not(:disabled) {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-color: rgba(232,184,109,0.35);
+}
+.vault-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ─── Vault ─── */
+.vault-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r2);
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+.vault-card:hover { border-color: var(--line-3); }
+
+.vault-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.vault-card-meta { display: flex; align-items: center; gap: 8px; }
+.vault-type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: .04em;
+}
+.vault-date { font-size: 11px; color: var(--tx-3); }
+
+.vault-card-actions { display: flex; align-items: center; gap: 8px; }
+.vault-expand-btn {
+  font-size: 11px;
+  color: var(--tx-3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg-4);
+  border: 1px solid var(--line);
+  transition: all var(--transition);
+}
+.vault-expand-btn:hover { color: var(--tx); background: var(--bg-5); }
+
+.vault-del-btn {
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  color: var(--tx-3);
+  border-radius: 6px;
+  transition: all var(--transition);
+}
+.vault-del-btn:hover { color: var(--red); background: var(--red-dim); }
+
+.vault-card-title {
+  padding: 12px 16px 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tx);
+}
+.vault-card-stats {
+  display: flex;
+  gap: 8px;
+  padding: 4px 16px 12px;
+  flex-wrap: wrap;
+}
+.vault-stat {
+  font-size: 11px;
+  color: var(--tx-3);
+  background: var(--bg-4);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.vault-card-body {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+}

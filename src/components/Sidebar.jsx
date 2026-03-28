@@ -8,6 +8,7 @@ const NAV = [
   { id: 'planner',  icon: '📅', label: '플래너',      tooltip: '오늘 할 일을 요일별로 직접 관리하세요' },
   { id: 'ai-goal',  icon: '🤖', label: 'AI 계획 생성', tooltip: '목표와 기간을 입력하면 AI가 맞춤 계획을 설계해드립니다' },
   { id: 'ai-auto',  icon: '✨', label: 'AI 주간 분석', tooltip: '지난 플래너를 분석해 다음 주 계획을 자동으로 제안해드립니다' },
+  { id: 'vault',    icon: '🗂', label: '보관함',       tooltip: '저장된 AI 계획을 보관하고 언제든 적용하세요' },
 ]
 
 export default function Sidebar({ user, onLogout }) {
@@ -160,6 +161,14 @@ export default function Sidebar({ user, onLogout }) {
             <span className="mobile-tab-label">{n.label}</span>
           </button>
         ))}
+        <button
+          key="vault"
+          className={`mobile-tab ${view === 'vault' ? 'active' : ''}`}
+          onClick={() => setView('vault')}
+        >
+          <span className="mobile-tab-icon">🗂</span>
+          <span className="mobile-tab-label">보관함</span>
+        </button>
         <button className="mobile-tab" onClick={onLogout}>
           <span className="mobile-tab-icon">↩</span>
           <span className="mobile-tab-label">로그아웃</span>

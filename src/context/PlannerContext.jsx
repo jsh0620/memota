@@ -11,6 +11,7 @@ function init() {
   return {
     plans: {},
     aiHistory: [],
+    vault: [],
     ui: {
       view: savedView,
       weekKey: todayWk,
@@ -111,6 +112,19 @@ function reducer(state, action) {
         ...state,
         aiHistory: [action.entry, ...state.aiHistory].slice(0, 10),
       }
+    }
+
+    case 'VAULT_SAVE': {
+      const entry = { ...action.entry, id: Date.now().toString(), savedAt: new Date().toISOString() }
+      return { ...state, vault: [entry, ...(state.vault ?? [])].slice(0, 5) }
+    }
+
+    case 'VAULT_DELETE': {
+      return { ...state, vault: (state.vault ?? []).filter(v => v.id !== action.id) }
+    }
+
+    case 'VAULT_CLEAR': {
+      return { ...state, vault: [] }
     }
 
     case 'RESET':

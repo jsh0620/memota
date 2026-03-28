@@ -4,7 +4,9 @@ import Sidebar from './components/Sidebar'
 import WeeklyPlanner from './components/WeeklyPlanner'
 import AIGoalPage from './pages/AIGoalPage'
 import AIAutoPage from './pages/AIAutoPage'
+import VaultPage from './pages/VaultPage'
 import AuthPage from './components/AuthPage'
+import VaultPage from './pages/VaultPage'
 import { getUser, isLoggedIn, logout } from './utils/authApi'
 
 function AppInner({ user, onLogout }) {
@@ -18,6 +20,8 @@ function AppInner({ user, onLogout }) {
         {view === 'planner'  && <WeeklyPlanner />}
         {view === 'ai-goal'  && <AIGoalPage />}
         {view === 'ai-auto'  && <AIAutoPage />}
+        {view === 'vault'     && <VaultPage />}
+        {view === 'vault'    && <VaultPage />}
       </main>
     </div>
   )

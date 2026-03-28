@@ -65,7 +65,7 @@ export async function generateGoalPlan({ period, periodUnit, goal, details }) {
   "tips": ["실천 팁 3~4개"]
 }
 
-규칙: 각 요일 1~3개 항목, 항목은 구체적인 행동 단위, 주말은 복습/회고/휴식 위주`
+규칙: 각 요일 1~3개 항목, 항목은 구체적인 행동 단위, 절대로 사용자가 언급한 목표와 계획에 있는 단어중 관련되지 않은 한국어 외의 다른 단어를 답변이나 계획에 사용해서는 안됨`
 
   const user = `기간: ${period}${periodUnit}\n목표: ${goal}\n세부사항: ${details || '없음'}`
   return ask(system, user)
@@ -73,7 +73,7 @@ export async function generateGoalPlan({ period, periodUnit, goal, details }) {
 
 /* ── ② 최근 기록 기반 자동 생성 ── */
 export async function generateAutoNextWeek(recentData) {
-  const system = `당신은 개인 AI 플래너입니다. 사용자의 최근 2주 플래너 기록을 분석해서 다음 주 계획을 제안해주세요.
+  const system = `당신은 개인 AI 플래너입니다. 사용자의 최근 2주 플래너 기록을 분석해서 다음 주 계획을 제안해주세요. 절대로 사용자가 언급한 목표와 계획에 있는 단어중 관련되지 않은 한국어 외의 다른 단어를 답변이나 계획에 사용해서는 안됨.
 
 출력 형식 (순수 JSON, 코드블록 없음):
 {
