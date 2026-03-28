@@ -48,8 +48,15 @@ export default function Sidebar({ user, onLogout }) {
         <div className="sidebar-brand">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="brand-name">memota</div>
-            <button className="theme-toggle" onClick={toggleTheme} title="테마 변경">
-              {theme === 'dark' ? '☀️' : '🌙'}
+            <button
+              className={`theme-switch ${theme === 'light' ? 'is-light' : ''}`}
+              onClick={toggleTheme}
+              title="테마 변경"
+              aria-label="테마 변경"
+            >
+              <span className="theme-switch-thumb">
+                {theme === 'dark' ? '🌙' : '☀️'}
+              </span>
             </button>
           </div>
           <div className="brand-sub">AI-POWERED PLANNER</div>
@@ -129,8 +136,14 @@ export default function Sidebar({ user, onLogout }) {
               <button className="week-arrow" onClick={() => dispatch({ type: 'UI_WEEK', weekKey: nextWeekKey(weekKey) })}>▶</button>
             </div>
           )}
-          <button className="theme-toggle" onClick={toggleTheme}>
-            {theme === 'dark' ? '☀️' : '🌙'}
+          <button
+            className={`theme-switch ${theme === 'light' ? 'is-light' : ''}`}
+            onClick={toggleTheme}
+            aria-label="테마 변경"
+          >
+            <span className="theme-switch-thumb">
+              {theme === 'dark' ? '🌙' : '☀️'}
+            </span>
           </button>
         </div>
       </header>

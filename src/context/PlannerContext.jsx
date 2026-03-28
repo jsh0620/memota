@@ -7,11 +7,12 @@ const Ctx = createContext(null)
 const todayWk = getWeekKey()
 
 function init() {
+  const savedView = localStorage.getItem('planai-view') || 'planner'
   return {
     plans: {},
     aiHistory: [],
     ui: {
-      view: 'planner',
+      view: savedView,
       weekKey: todayWk,
     },
     loaded: false,
@@ -24,7 +25,9 @@ function reducer(state, action) {
     case 'PLANS_LOADED':
       return { ...state, plans: action.plans, loaded: true }
 
-    case 'UI_VIEW': return { ...state, ui: { ...state.ui, view: action.view } }
+    case 'UI_VIEW':
+      localStorage.setItem('planai-view', action.view)
+      return { ...state, ui: { ...state.ui, view: action.view } }
     case 'UI_WEEK': return { ...state, ui: { ...state.ui, weekKey: action.weekKey } }
 
     case 'TASK_ADD': {
