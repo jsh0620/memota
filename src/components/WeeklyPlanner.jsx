@@ -83,10 +83,19 @@ export default function WeeklyPlanner() {
   const dates  = getWeekDates(weekKey)
   const wp     = plans[weekKey] ?? {}
   const today  = todayDayKey()
-  const [selectedDay, setSelectedDay] = useState(today)
 
-  const selTasks = wp[selectedDay] ?? []
-  const selDate  = dates[selectedDay]
+  // 아코디언: 열린 요일 관리 (오늘 기본 열림)
+  const [openDay, setOpenDay] = useState(today)
+
+  const toggleDay = (day) => {
+    setOpenDay(prev => prev === day ? null : day)
+  }
+
+  // 달성률
+  const allTasks = Object.values(wp).flat()
+  const total = allTasks.length
+  const done  = allTasks.filter(t => t.done).length
+  const pct   = total ? Math.round(done/total*100) : 0
 
   return (
     <>
@@ -95,15 +104,15 @@ export default function WeeklyPlanner() {
         {/* 요일 탭 스트립 */}
         <div className="day-strip">
           {DAYS.map(day => {
-            const date    = dates[day]
-            const isTod   = isToday(date)
-            const isWknd  = day==='sat' || day==='sun'
-            const isSel   = selectedDay === day
+            const date   = dates[day]
+            const isTod  = isToday(date)
+            const isWknd = day==='sat' || day==='sun'
+            const isOpen = openDay === day
             return (
               <button
                 key={day}
-                className={`day-strip-btn ${isTod?'today':''} ${isWknd?'weekend':''} ${isSel&&!isTod?'selected':''}`}
-                onClick={() => setSelectedDay(day)}
+                className={`day-strip-btn ${isTod?'today':''} ${isWknd?'weekend':''} ${isOpen&&!isTod?'selected':''}`}
+                onClick={() => toggleDay(day)}
               >
                 <span className="day-strip-name">{DAY_KO[day]}</span>
                 <span className="day-strip-num">{formatMonthDay(date).split('/')[1]}</span>
@@ -112,71 +121,74 @@ export default function WeeklyPlanner() {
           })}
         </div>
 
-        {/* 선택된 요일 카드 */}
+        {/* 아코디언 카드 리스트 */}
         <div className="planner-mobile-body">
-          {/* 통계 */}
-          {(() => {
-            const allTasks = Object.values(wp).flat()
-            const total = allTasks.length
-            const done  = allTasks.filter(t => t.done).length
-            const pct   = total ? Math.round(done/total*100) : 0
-            if (!total) return null
-            return (
-              <div style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 12px', background:'var(--bg-3)', borderRadius:'var(--r)', border:'1px solid var(--line)' }}>
-                <span style={{ fontSize:11, color:'var(--tx-3)' }}>이번 주</span>
-                <div style={{ flex:1, height:3, background:'var(--line-2)', borderRadius:2, overflow:'hidden' }}>
-                  <div style={{ height:'100%', width:`${pct}%`, background:'linear-gradient(90deg,var(--gold),#f5d08a)', borderRadius:2, transition:'width .5s' }}/>
-                </div>
-                <span style={{ fontSize:11, fontWeight:700, color:'var(--gold)' }}>{pct}%</span>
+          {/* 달성률 바 */}
+          {total > 0 && (
+            <div style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 12px', background:'var(--bg-3)', borderRadius:'var(--r)', border:'1px solid var(--line)' }}>
+              <span style={{ fontSize:11, color:'var(--tx-3)' }}>이번 주</span>
+              <div style={{ flex:1, height:3, background:'var(--line-2)', borderRadius:2, overflow:'hidden' }}>
+                <div style={{ height:'100%', width:`${pct}%`, background:'linear-gradient(90deg,var(--gold),#f5d08a)', borderRadius:2, transition:'width .5s' }}/>
               </div>
-            )
-          })()}
-
-          {/* 선택 요일 카드 */}
-          <div className={`day-card-mobile ${isToday(selDate)?'is-today':''} ${selectedDay==='sat'||selectedDay==='sun'?'is-weekend':''}`}>
-            <div className="day-card-head">
-              <div className="day-card-label">
-                {isToday(selDate) && <span className="today-dot"/>}
-                {DAY_FULL_KO[selectedDay]}
-                <span style={{ fontSize:13, fontWeight:400, color:'var(--tx-3)', marginLeft:4 }}>
-                  {formatMonthDay(selDate)}
-                </span>
-                {isToday(selDate) && <span style={{ fontSize:10, color:'var(--gold)', marginLeft:4 }}>오늘</span>}
-              </div>
-              <div className="day-card-count">{selTasks.length}개</div>
+              <span style={{ fontSize:11, fontWeight:700, color:'var(--gold)' }}>{pct}%</span>
             </div>
-            <div className="task-area">
-              {selTasks.length === 0 && (
-                <div style={{ padding:'20px 10px', textAlign:'center', color:'var(--tx-3)', fontSize:12 }}>
-                  할 일을 추가해보세요
-                </div>
-              )}
-              {selTasks.map(t => <TaskItem key={t.id} task={t} weekKey={weekKey} day={selectedDay}/>)}
-            </div>
-            <AddTask weekKey={weekKey} day={selectedDay}/>
-          </div>
+          )}
 
-          {/* 다른 요일 미리보기 */}
-          {DAYS.filter(d => d !== selectedDay).map(day => {
-            const tasks = wp[day] ?? []
-            if (!tasks.length) return null
-            const done = tasks.filter(t => t.done).length
+          {/* 모든 요일을 순서대로 아코디언으로 */}
+          {DAYS.map(day => {
+            const date    = dates[day]
+            const isTod   = isToday(date)
+            const isWknd  = day==='sat' || day==='sun'
+            const isOpen  = openDay === day
+            const tasks   = wp[day] ?? []
+            const doneCnt = tasks.filter(t => t.done).length
+
             return (
-              <div key={day} className={`day-card-mobile ${isToday(dates[day])?'is-today':''} ${day==='sat'||day==='sun'?'is-weekend':''}`}
-                style={{ cursor:'pointer' }} onClick={() => setSelectedDay(day)}>
-                <div className="day-card-head">
+              <div key={day} className={`day-card-mobile ${isTod?'is-today':''} ${isWknd?'is-weekend':''}`}>
+                {/* 헤더 — 클릭으로 열기/닫기 */}
+                <div
+                  className="day-card-head"
+                  style={{ cursor:'pointer' }}
+                  onClick={() => toggleDay(day)}
+                >
                   <div className="day-card-label">
-                    {isToday(dates[day]) && <span className="today-dot"/>}
+                    {isTod && <span className="today-dot"/>}
                     {DAY_FULL_KO[day]}
                     <span style={{ fontSize:13, fontWeight:400, color:'var(--tx-3)', marginLeft:4 }}>
-                      {formatMonthDay(dates[day])}
+                      {formatMonthDay(date)}
                     </span>
+                    {isTod && <span style={{ fontSize:10, color:'var(--gold)', marginLeft:4 }}>오늘</span>}
                   </div>
                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                    <span style={{ fontSize:11, color:'var(--green)', fontWeight:600 }}>{done}/{tasks.length}</span>
-                    <span style={{ fontSize:11, color:'var(--tx-3)', background:'var(--bg-4)', padding:'2px 8px', borderRadius:20 }}>펼치기 ▶</span>
+                    {tasks.length > 0 && (
+                      <span style={{
+                        fontSize:11,
+                        color: doneCnt === tasks.length && tasks.length > 0 ? 'var(--green)' : 'var(--tx-3)',
+                        fontWeight:600
+                      }}>
+                        {doneCnt}/{tasks.length}
+                      </span>
+                    )}
+                    <div className="day-card-count" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)', transition:'transform .2s' }}>
+                      ▼
+                    </div>
                   </div>
                 </div>
+
+                {/* 펼쳐진 내용 */}
+                {isOpen && (
+                  <>
+                    <div className="task-area">
+                      {tasks.length === 0 && (
+                        <div style={{ padding:'18px 10px', textAlign:'center', color:'var(--tx-3)', fontSize:12 }}>
+                          할 일을 추가해보세요
+                        </div>
+                      )}
+                      {tasks.map(t => <TaskItem key={t.id} task={t} weekKey={weekKey} day={day}/>)}
+                    </div>
+                    <AddTask weekKey={weekKey} day={day}/>
+                  </>
+                )}
               </div>
             )
           })}
