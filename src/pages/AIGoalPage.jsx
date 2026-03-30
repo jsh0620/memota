@@ -103,7 +103,7 @@ export default function AIGoalPage() {
             <div className="form-grid">
               <div className="field">
                 <label>기간</label>
-                <input type="number" min="1" max="24" value={period} onChange={e => setPeriod(e.target.value)} style={{ width:'100%' }}/>
+                <input type="number" min="1" max="8" value={period} onChange={e => setPeriod(e.target.value)} style={{ width:'100%' }}/>
               </div>
               <div className="field">
                 <label>단위</label>
@@ -111,6 +111,7 @@ export default function AIGoalPage() {
                   <option>주</option>
                   <option>개월</option>
                   <option>년</option>
+                  
                 </select>
               </div>
               <div className="field span2">
