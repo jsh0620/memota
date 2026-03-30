@@ -99,7 +99,7 @@ export async function generateGoalPlan({ period, periodUnit, goal, details }) {
 [계획 규칙]
 - 각 요일 1~3개 항목
 - 사용자가 언급한 가용 요일에만 계획 배정
-- 주말은 복습/회고/휴식 위주
+- 주말이라고 해서 특별히 복습/휴식/회고로 고정하지 말 것. 세부사항에 주말 관련 언급이 없다면 평일과 동일하게 자유롭게 계획 배정
 - 주차가 지날수록 난이도 점진적으로 상승`
 
   const fewShot = [
@@ -120,8 +120,8 @@ export async function generateGoalPlan({ period, periodUnit, goal, details }) {
           wed: ['이벤트 처리 실습하기'],
           thu: ['리스트 렌더링 연습하기'],
           fri: ['간단한 앱 만들어보기'],
-          sat: ['이번 주 내용 복습하기'],
-          sun: ['휴식 및 다음 주 계획 세우기']
+          sat: ['실습 프로젝트 만들어보기'],
+          sun: ['이번 주 내용 정리하기']
         }],
         tips: ['매일 같은 시간에 학습하는 습관을 들이세요.', '모르는 내용은 바로 검색하여 해결하세요.']
       })
@@ -175,8 +175,8 @@ export async function generateAutoNextWeek(recentData) {
           wed: ['운동 30분 하기'],
           thu: ['책 10쪽 읽기'],
           fri: ['이번 주 돌아보기'],
-          sat: ['휴식하기'],
-          sun: ['다음 주 계획 세우기']
+          sat: ['가벼운 운동 30분 하기'],
+          sun: ['이번 주 돌아보기']
         }
       })
     }

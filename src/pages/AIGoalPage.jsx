@@ -9,18 +9,19 @@ const DAYS = ['mon','tue','wed','thu','fri','sat','sun']
 export default function AIGoalPage() {
   const { state, dispatch } = usePlanner()
 
-  const [period, setPeriod]       = useState('1')
-  const [goal, setGoal]           = useState('')
-  const [details, setDetails]     = useState('')
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState(null)
-  const [result, setResult]       = useState(null)
-  const [savedToVault, setSaved]  = useState(false)
+  const [period, setPeriod]      = useState('1')
+  const [goal, setGoal]          = useState('')
+  const [details, setDetails]    = useState('')
+  const [loading, setLoading]    = useState(false)
+  const [error, setError]        = useState(null)
+  const [result, setResult]      = useState(null)
+  const [savedToVault, setSaved] = useState(false)
   const [showResetConfirm, setShowResetConfirm] = useState(false)
 
   async function handleGenerate() {
     if (!goal.trim()) { setError('목표를 입력해주세요.'); return }
-    setLoading(true); setError(null); setResult(null); setSaved(false)
+    // 새 계획 생성 시 확인창 상태도 초기화
+    setLoading(true); setError(null); setResult(null); setSaved(false); setShowResetConfirm(false)
     try {
       const data = await generateGoalPlan({ period, periodUnit: '주', goal, details })
       setResult(data)
@@ -53,14 +54,7 @@ export default function AIGoalPage() {
     }
     dispatch({
       type: 'VAULT_SAVE',
-      entry: {
-        type: 'goal',
-        title: goal,
-        period: `${period}주`,
-        goal,
-        details,
-        result,
-      },
+      entry: { type:'goal', title:goal, period:`${period}주`, goal, details, result },
     })
     setSaved(true)
   }
@@ -78,7 +72,6 @@ export default function AIGoalPage() {
     setGoal('')
     setDetails('')
     setPeriod('1')
-    setUnit('개월')
     setError(null)
     setSaved(false)
     setShowResetConfirm(false)
@@ -86,8 +79,6 @@ export default function AIGoalPage() {
 
   return (
     <div className="ai-page">
-
-      {/* 왼쪽 */}
       <div>
         <div className="page-header" style={{ padding:'0 0 24px', border:'none' }}>
           <div className="page-title">AI 계획 생성</div>
@@ -121,19 +112,13 @@ export default function AIGoalPage() {
             </button>
           </div>
         ) : (
-          /* 결과 화면 */
           <div>
-            {/* 액션 버튼 3개 */}
+            {/* 액션 버튼 */}
             <div style={{ display:'flex', gap:10, marginBottom:16, flexWrap:'wrap' }}>
               <button className="btn-primary" style={{ marginTop:0, flex:1 }} onClick={handleApply}>
                 ▷ 플래너에 적용
               </button>
-              <button
-                className="btn-secondary"
-                style={{ flex:1 }}
-                onClick={handleSaveVault}
-                disabled={savedToVault}
-              >
+              <button className="btn-secondary" style={{ flex:1 }} onClick={handleSaveVault} disabled={savedToVault}>
                 {savedToVault ? '✓ 보관함에 저장됨' : '🗂 보관함에 저장'}
               </button>
               <button className="btn-secondary" onClick={handleReset} style={{ flex:'0 0 auto' }}>
@@ -141,14 +126,12 @@ export default function AIGoalPage() {
               </button>
             </div>
 
-            {/* 저장 완료 메시지 */}
             {savedToVault && (
               <div style={{ fontSize:12, color:'var(--green)', marginBottom:12, padding:'8px 12px', background:'var(--green-dim)', borderRadius:'var(--r)' }}>
                 ✓ 보관함에 저장되었습니다. 보관함 탭에서 언제든 다시 적용할 수 있습니다.
               </div>
             )}
 
-            {/* 초기화 확인 모달 */}
             {showResetConfirm && (
               <div style={{ padding:'14px 16px', background:'var(--red-dim)', border:'1px solid rgba(248,113,113,.25)', borderRadius:'var(--r)', marginBottom:14 }}>
                 <div style={{ fontSize:13, color:'var(--tx)', marginBottom:10 }}>
@@ -206,7 +189,6 @@ export default function AIGoalPage() {
           </div>
         )}
       </div>
-
     </div>
   )
 }
