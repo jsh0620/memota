@@ -194,23 +194,6 @@ export default function Sidebar({ user, onLogout }) {
         </div>
       </header>
 
-      {/* ── 모바일 하단 탭바 ── */}
-      <nav className="mobile-tabbar">
-        {NAV.map(n => {
-          const Icon = ICONS[n.id]
-          const active = view === n.id
-          return (
-            <button key={n.id} className={`mobile-tab ${active?'active':''}`} onClick={() => setView(n.id)}>
-              <div className="tab-icon-wrap"><Icon active={active}/></div>
-              <span className="mobile-tab-label">{n.label}</span>
-            </button>
-          )
-        })}
-        <button className="mobile-tab" onClick={onLogout}>
-          <div className="tab-icon-wrap"><IconLogout/></div>
-          <span className="mobile-tab-label">로그아웃</span>
-        </button>
-      </nav>
 
       {showModal && <ApiKeyModal onClose={() => setShowModal(false)}/>}
     </>

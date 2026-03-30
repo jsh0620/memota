@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { usePlanner } from '../context/PlannerContext'
 import { generateAutoNextWeek } from '../utils/claudeApi'
 import { getWeekKey, nextWeekKey, prevWeekKey, formatWeekRange, DAYS, DAY_KO } from '../utils/dateUtils'
-import AIIllustration from '../components/AIIllustration'
 
 export default function AIAutoPage() {
   const { state, dispatch } = usePlanner()
@@ -213,11 +212,6 @@ export default function AIAutoPage() {
             <div className="loading-text">패턴을 분석하고 최적 계획을 설계하는 중...</div>
           </div>
         )}
-      </div>
-
-      {/* 오른쪽: 일러스트 */}
-      <div style={{ position:'sticky', top:32 }}>
-        <AIIllustration variant="auto" />
       </div>
 
     </div>

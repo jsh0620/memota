@@ -579,6 +579,7 @@ textarea { resize: none; }
   box-shadow: 0 24px 64px rgba(0,0,0,.5); animation: fadeIn .3s ease;
 }
 .auth-logo { text-align: center; margin-bottom: 28px; }
+.auth-logo-icon { font-size: 26px; color: var(--gold); margin-bottom: 6px; }
 .auth-logo-name { font-family: var(--serif); font-size: 32px; color: var(--gold); letter-spacing: .04em; }
 .auth-logo-sub { font-size: 10px; color: var(--tx-3); letter-spacing: .1em; margin-top: 3px; }
 .auth-theme-btn {

@@ -54,6 +54,7 @@ export default function AuthPage({ onLogin }) {
 
         {/* 로고 */}
         <div className="auth-logo">
+          <div className="auth-logo-icon">✦</div>
           <div className="auth-logo-name">memota</div>
           <div className="auth-logo-sub">AI-POWERED PLANNER</div>
         </div>

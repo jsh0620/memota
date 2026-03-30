@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { usePlanner } from '../context/PlannerContext'
 import { generateGoalPlan } from '../utils/claudeApi'
 import { getWeekKey, nextWeekKey } from '../utils/dateUtils'
-import AIIllustration from '../components/AIIllustration'
 
 const DAY_KO = { mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일' }
 const DAYS = ['mon','tue','wed','thu','fri','sat','sun']
@@ -212,11 +211,6 @@ export default function AIGoalPage() {
             <div className="loading-text">AI가 최적의 계획을 설계하고 있습니다...</div>
           </div>
         )}
-      </div>
-
-      {/* 오른쪽: 일러스트 */}
-      <div style={{ position:'sticky', top:32 }}>
-        <AIIllustration variant="goal" />
       </div>
 
     </div>
