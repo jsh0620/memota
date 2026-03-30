@@ -10,7 +10,7 @@ export default function AIGoalPage() {
   const { state, dispatch } = usePlanner()
 
   const [period, setPeriod]       = useState('1')
-  const [unit, setUnit]           = useState('개월')
+  const unit = '주'
   const [goal, setGoal]           = useState('')
   const [details, setDetails]     = useState('')
   const [loading, setLoading]     = useState(false)
@@ -23,7 +23,7 @@ export default function AIGoalPage() {
     if (!goal.trim()) { setError('목표를 입력해주세요.'); return }
     setLoading(true); setError(null); setResult(null); setSaved(false)
     try {
-      const data = await generateGoalPlan({ period, periodUnit: unit, goal, details })
+      const data = await generateGoalPlan({ period, periodUnit: '주', goal, details })
       setResult(data)
     } catch (e) {
       setError(e.message)
@@ -86,7 +86,7 @@ export default function AIGoalPage() {
   }
 
   return (
-    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:32, padding:36, alignItems:'start' }}>
+    <div className="ai-page">
 
       {/* 왼쪽 */}
       <div>

@@ -34,7 +34,12 @@ function AppInner({ user, onLogout }) {
 export default function App() {
   const [user, setUser] = useState(() => isLoggedIn() ? getUser() : null)
   function handleLogin(userData) { setUser(userData) }
-  function handleLogout() { logout(); setUser(null) }
+  function handleLogout() {
+    if (window.confirm('로그아웃 하시겠습니까?')) {
+      logout()
+      setUser(null)
+    }
+  }
   if (!user) return <AuthPage onLogin={handleLogin} />
   return (
     <PlannerProvider user={user}>

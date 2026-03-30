@@ -138,6 +138,9 @@ export default function WeeklyPlanner() {
               <div className="day-card-label">
                 {isToday(selDate) && <span className="today-dot"/>}
                 {DAY_FULL_KO[selectedDay]}
+                <span style={{ fontSize:13, fontWeight:400, color:'var(--tx-3)', marginLeft:4 }}>
+                  {formatMonthDay(selDate)}
+                </span>
                 {isToday(selDate) && <span style={{ fontSize:10, color:'var(--gold)', marginLeft:4 }}>오늘</span>}
               </div>
               <div className="day-card-count">{selTasks.length}개</div>
@@ -165,6 +168,9 @@ export default function WeeklyPlanner() {
                   <div className="day-card-label">
                     {isToday(dates[day]) && <span className="today-dot"/>}
                     {DAY_FULL_KO[day]}
+                    <span style={{ fontSize:13, fontWeight:400, color:'var(--tx-3)', marginLeft:4 }}>
+                      {formatMonthDay(dates[day])}
+                    </span>
                   </div>
                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                     <span style={{ fontSize:11, color:'var(--green)', fontWeight:600 }}>{done}/{tasks.length}</span>
