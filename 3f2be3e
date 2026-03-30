@@ -1,0 +1,23 @@
+[33mb86e354[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m change ai model
+[33m4bf2604[m mobile update
+[33m3f2be3e[m fixed app
+[33m0ee8275[m storage add
+[33m54847b7[m theme switch, illust add
+[33md2b14f7[m add picture
+[33m1eab2c5[m Update index.html
+[33m2f1e800[m fix weekend color, add task button
+[33mac6cb43[m SFDSF
+[33m5bfe5c3[m no light theme error fixed
+[33maf3f287[m theme toggle, save 500 auth fixed
+[33ma1ff950[m useEffect code add
+[33m1c05fb7[m margin error plus etc fixed
+[33m9dd7392[m login update with supabase
+[33mdce2012[m force output
+[33m749cf79[m sidebar, weekend detail fixed
+[33me8ea99c[m mobile update
+[33m14e1cb6[m change details
+[33m8101fba[m memota rename, theme toggle, better AI prompts
+[33md3937bb[m change to groq final
+[33m37ee46e[m fix gemini model name
+[33me44ead7[m switch to gemini app
+[33m27b5ee6[m init
