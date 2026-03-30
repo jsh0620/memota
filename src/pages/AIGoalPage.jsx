@@ -56,7 +56,7 @@ export default function AIGoalPage() {
       entry: {
         type: 'goal',
         title: goal,
-        period: `${period}${unit}`,
+        period: `${period}주`,
         goal,
         details,
         result,
@@ -167,7 +167,7 @@ export default function AIGoalPage() {
 
             <div className="result-box">
               <div className="result-header">
-                <span className="result-title">✦ 생성된 계획 — {period}{unit} · {result.totalWeeks}주</span>
+                <span className="result-title">✦ 생성된 계획 — {period}주 · {result.totalWeeks}주</span>
               </div>
               <div className="result-body">
                 {result.summary && <div className="summary-text">{result.summary}</div>}
