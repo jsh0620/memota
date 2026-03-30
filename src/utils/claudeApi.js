@@ -10,7 +10,7 @@ async function ask(system, user) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${KEY}` },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: 'qwen-qwq-32b',
       messages: [
         { role: 'system', content: system },
         { role: 'user',   content: user },
