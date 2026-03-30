@@ -141,9 +141,10 @@ textarea { resize: none; }
 /* ── 메인 콘텐츠 ── */
 .main-content {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── 하단 탭바 ── */
@@ -460,7 +461,7 @@ textarea { resize: none; }
 /* ════════════════════════
    AI PAGES
 ════════════════════════ */
-.ai-page { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.ai-page { padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; min-height: 0; }
 
 @media (min-width: 768px) {
   .ai-page { padding: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; max-width: 1000px; }
