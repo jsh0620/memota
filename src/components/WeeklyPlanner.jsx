@@ -84,25 +84,32 @@ export default function WeeklyPlanner() {
   const wp     = plans[weekKey] ?? {}
   const today  = todayDayKey()
 
-  // 아코디언: 열린 요일 관리 (오늘 기본 열림)
+  // 열린 요일 (오늘 기본)
   const [openDay, setOpenDay] = useState(today)
 
   const toggleDay = (day) => {
     setOpenDay(prev => prev === day ? null : day)
   }
 
-  // 달성률
-  const allTasks = Object.values(wp).flat()
-  const total = allTasks.length
-  const done  = allTasks.filter(t => t.done).length
-  const pct   = total ? Math.round(done/total*100) : 0
+  // 이번 주 달성률
+  const allTasks  = Object.values(wp).flat()
+  const weekTotal = allTasks.length
+  const weekDone  = allTasks.filter(t => t.done).length
+  const weekPct   = weekTotal ? Math.round(weekDone / weekTotal * 100) : 0
+
+  // 오늘 달성률
+  const todayTasks = wp[today] ?? []
+  const todayTotal = todayTasks.length
+  const todayDone  = todayTasks.filter(t => t.done).length
+  const todayPct   = todayTotal ? Math.round(todayDone / todayTotal * 100) : 0
 
   return (
     <>
       {/* ── 모바일 플래너 ── */}
-      <div style={{ display:'flex', flexDirection:'column', height:'100%' }}>
-        {/* 요일 탭 스트립 */}
-        <div className="day-strip">
+      <div style={{ display:'flex', flexDirection:'column', height:'100%', overflow:'hidden' }}>
+
+        {/* 요일 탭 스트립 — 고정 */}
+        <div className="day-strip" style={{ flexShrink:0 }}>
           {DAYS.map(day => {
             const date   = dates[day]
             const isTod  = isToday(date)
@@ -121,20 +128,34 @@ export default function WeeklyPlanner() {
           })}
         </div>
 
-        {/* 아코디언 카드 리스트 */}
-        <div className="planner-mobile-body">
+        {/* 스크롤 가능한 바디 */}
+        <div className="planner-mobile-body" style={{ flex:1, overflowY:'auto', WebkitOverflowScrolling:'touch' }}>
+
           {/* 달성률 바 */}
-          {total > 0 && (
-            <div style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 12px', background:'var(--bg-3)', borderRadius:'var(--r)', border:'1px solid var(--line)' }}>
-              <span style={{ fontSize:11, color:'var(--tx-3)' }}>이번 주</span>
-              <div style={{ flex:1, height:3, background:'var(--line-2)', borderRadius:2, overflow:'hidden' }}>
-                <div style={{ height:'100%', width:`${pct}%`, background:'linear-gradient(90deg,var(--gold),#f5d08a)', borderRadius:2, transition:'width .5s' }}/>
-              </div>
-              <span style={{ fontSize:11, fontWeight:700, color:'var(--gold)' }}>{pct}%</span>
+          {(weekTotal > 0 || todayTotal > 0) && (
+            <div style={{ display:'flex', flexDirection:'column', gap:6, padding:'10px 12px', background:'var(--bg-3)', borderRadius:'var(--r)', border:'1px solid var(--line)' }}>
+              {weekTotal > 0 && (
+                <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                  <span style={{ fontSize:11, color:'var(--tx-3)', width:36, flexShrink:0 }}>이번 주</span>
+                  <div style={{ flex:1, height:3, background:'var(--line-2)', borderRadius:2, overflow:'hidden' }}>
+                    <div style={{ height:'100%', width:`${weekPct}%`, background:'linear-gradient(90deg,var(--gold),#f5d08a)', borderRadius:2, transition:'width .5s' }}/>
+                  </div>
+                  <span style={{ fontSize:11, fontWeight:700, color:'var(--gold)', width:30, textAlign:'right', flexShrink:0 }}>{weekPct}%</span>
+                </div>
+              )}
+              {todayTotal > 0 && (
+                <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                  <span style={{ fontSize:11, color:'var(--tx-3)', width:36, flexShrink:0 }}>오늘</span>
+                  <div style={{ flex:1, height:3, background:'var(--line-2)', borderRadius:2, overflow:'hidden' }}>
+                    <div style={{ height:'100%', width:`${todayPct}%`, background:'linear-gradient(90deg,var(--green),#6ee7b7)', borderRadius:2, transition:'width .5s' }}/>
+                  </div>
+                  <span style={{ fontSize:11, fontWeight:700, color:'var(--green)', width:30, textAlign:'right', flexShrink:0 }}>{todayPct}%</span>
+                </div>
+              )}
             </div>
           )}
 
-          {/* 모든 요일을 순서대로 아코디언으로 */}
+          {/* 요일 카드 아코디언 */}
           {DAYS.map(day => {
             const date    = dates[day]
             const isTod   = isToday(date)
@@ -145,12 +166,8 @@ export default function WeeklyPlanner() {
 
             return (
               <div key={day} className={`day-card-mobile ${isTod?'is-today':''} ${isWknd?'is-weekend':''}`}>
-                {/* 헤더 — 클릭으로 열기/닫기 */}
-                <div
-                  className="day-card-head"
-                  style={{ cursor:'pointer' }}
-                  onClick={() => toggleDay(day)}
-                >
+                {/* 헤더 */}
+                <div className="day-card-head" style={{ cursor:'pointer' }} onClick={() => toggleDay(day)}>
                   <div className="day-card-label">
                     {isTod && <span className="today-dot"/>}
                     {DAY_FULL_KO[day]}
@@ -161,21 +178,15 @@ export default function WeeklyPlanner() {
                   </div>
                   <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                     {tasks.length > 0 && (
-                      <span style={{
-                        fontSize:11,
-                        color: doneCnt === tasks.length && tasks.length > 0 ? 'var(--green)' : 'var(--tx-3)',
-                        fontWeight:600
-                      }}>
+                      <span style={{ fontSize:11, fontWeight:600, color: doneCnt === tasks.length ? 'var(--green)' : 'var(--tx-3)' }}>
                         {doneCnt}/{tasks.length}
                       </span>
                     )}
-                    <div className="day-card-count" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)', transition:'transform .2s' }}>
-                      ▼
-                    </div>
+                    <span style={{ fontSize:10, color:'var(--tx-3)', transform: isOpen ? 'rotate(180deg)' : 'rotate(0)', transition:'transform .2s', display:'inline-block' }}>▼</span>
                   </div>
                 </div>
 
-                {/* 펼쳐진 내용 */}
+                {/* 열렸을 때: 할일 목록 + 추가 */}
                 {isOpen && (
                   <>
                     <div className="task-area">
