@@ -10,7 +10,6 @@ export default function AIGoalPage() {
   const { state, dispatch } = usePlanner()
 
   const [period, setPeriod]       = useState('1')
-  const unit = '주'
   const [goal, setGoal]           = useState('')
   const [details, setDetails]     = useState('')
   const [loading, setLoading]     = useState(false)
@@ -100,17 +99,12 @@ export default function AIGoalPage() {
             <div className="ai-card-title">목표 설정</div>
             <div className="ai-card-sub">달성하고 싶은 목표와 기간을 구체적으로 입력할수록 더 좋은 계획이 만들어집니다</div>
             <div className="form-grid">
-              <div className="field">
-                <label>기간</label>
-                <input type="number" min="1" max="8" value={period} onChange={e => setPeriod(e.target.value)} style={{ width:'100%' }}/>
-              </div>
-              <div className="field">
-                <label>단위</label>
-                <select value={unit} onChange={e => setUnit(e.target.value)} style={{ padding:'9px 12px' }}>
-                  <option>주</option>
-                  <option>개월</option>
-                  <option>년</option>
-                  
+              <div className="field span2">
+                <label>기간(주)</label>
+                <select value={period} onChange={e => setPeriod(e.target.value)} style={{ padding:'11px 13px', fontSize:14 }}>
+                  {[1,2,3,4,5,6,7,8].map(n => (
+                    <option key={n} value={String(n)}>{n}주</option>
+                  ))}
                 </select>
               </div>
               <div className="field span2">
